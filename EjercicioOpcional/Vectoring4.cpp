@@ -92,6 +92,7 @@ T Vectoring4<T>::cross(const Vectoring4<T>& other) const
 	return Vectoring4<T>(
 		y*other.z-z*other.y,
 		z*other.x-x*other.z,
-		x*other.y-z*other.y
+		x*other.y-z*other.y,
+		0
 	);
 }
