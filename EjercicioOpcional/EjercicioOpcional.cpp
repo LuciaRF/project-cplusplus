@@ -1,50 +1,21 @@
-// EjercicioOpcional.cpp : Este archivo contiene la función "main". La ejecución del programa comienza y termina ahí.
-//
-
-//#include "Vectoring4.h"
+#include <cmath>
 #include "Aves.h"
 #include "Persona.h"
 using namespace std;
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 #include <iostream>
 #include <array>
 #include <string>
-template <typename T>
 
+template <typename T>
 T sumas(T x, T y)
 {
     return x + y;
 }
-
-template <typename C>
-class Vectors4
-{
-private:
-    array<C, 4> elementos;
-public:
-
-    Vectors4(const array<C, 4>& elementos) : elementos(elementos) {}
-    ~Vectors4() {}
-
-    C getComponent(int index) const
-    {
-        return elementos[index];
-    }
-   
-    /*auto getNormalizacion(array<C, 4> lista)
-    {
-        auto sum = 0.0f;
-        int len = lista.size();
-
-        for (int i = 0; i <= len-1; i++)
-        {
-            sum += pow(i,2);
-        }
-
-        return sqrt(sum);
-    }*/
-        
-};
 
 template <typename U>
 class Hogwarts 
@@ -154,19 +125,19 @@ public:
         return w;
     }
 
-    void setX(H value) const
+    void setX(H value)
     {
         this->x = value;
     }
-    void setY(H value) const
+    void setY(H value)
     {
         this->y = value;
     }
-    void setZ(H value) const
+    void setZ(H value)
     {
         this->z = value;
     }
-    void setW(H value) const
+    void setW(H value)
     {
         this->w = value;
     }
@@ -421,8 +392,42 @@ public:
 
 };
 
-//template <typename H>
-//class
+template <typename H>
+class Quaternion : public Vector4<H>
+{
+private:
+    float angulo;
+public:
+    Quaternion(H x, H y, H z, H w, float angulo) : 
+        Vector4<H>(x, y, z, w), angulo(angulo) {}
+
+    float getAngulo() const
+    {
+        return angulo;
+    }
+
+    void setAngulo(float value)
+    {
+        this->angulo = value;
+    }
+
+    array<Vector4<H>, 4> getMatrizRot() const {
+        return std::array<Vector4<H>, 4>{
+            Vector4<H>((1 - 2 * this->getY() * this->getY() - 2 * this->getZ() * this->getZ()), (2 * this->getX() * this->getY() - 2 * this->getW() * this->getZ()), (2 * this->getX() * this->getZ() + 2 * this->getW() * this->getY()), 0),
+                Vector4<H>((2 * this->getX() * this->getY() + 2 * this->getW() * this->getZ()), (1 - 2 * this->getX() * this->getX() - 2 * this->getZ() * this->getZ()), (2 * this->getY() * this->getZ() - 2 * this->getW() * this->getX()), 0),
+                Vector4<H>((2 * this->getX() * this->getZ() - 2 * this->getW() * this->getY()), (2 * this->getY() * this->getZ() + 2 * this->getW() * this->getX()), (1 - 2 * this->getX() * this->getX() - 2 * this->getY() * this->getY()), 0),
+                Vector4<H>(0, 0, 0, 1)
+        };
+    }
+
+    void printMatrizRot() const {
+        auto matriz = getMatrizRot();
+        for (const auto& vec : matriz) {
+            vec.print();
+        }
+    }
+
+};
 
 int main()
 {
@@ -451,12 +456,15 @@ int main()
     v1->print();
     std::cout << "El resultado de la suma es: "<< sumas(1,2) << endl;
 
+    /*Ejemplos de clases vector y matrices*/
+
     array<float, 4> a1 = { 7,2,1,3 };
     array<float, 4> a2 = { 3,2,6,3 };
 
     Matriz4x4<float>* m1 = new Matriz4x4<float>();
     Matriz4x4<float>* m2 = new Matriz4x4<float>(1);
     Matriz4x4<float> m3(a1,a1,a2,a2);
+    Matriz4x4<float> m4(*v1,*v1,*v1,*v1);
 
 
     m1->print();
@@ -484,7 +492,18 @@ int main()
 
     mulSuma.print();
 
-    /*Ejemplos de clases*/
+    /*Ejemplos de clases Quaternion*/
+
+    Quaternion<float>* q1 = new Quaternion<float>(1, 1, 1, 1, M_PI);
+    cout << "El angulo1 es: " << q1->getAngulo() << endl;
+    q1->setAngulo(2 * M_PI);
+    cout << "El angulo2 es: " << q1->getAngulo() << endl;
+    q1->printMatrizRot();
+
+
+
+
+    /*Ejemplos de clases General*/
 
     Animal * animal1 = new Animal(4, "perro");
     animal1->getEspecie();
@@ -497,9 +516,6 @@ int main()
 
 
     alumno1.getElement();
-
-    Vectors4<int> vector1(elementosfloat);
-    cout << "elemento: " << vector1.getComponent(2) << endl;
 
     Aves * ave = new Aves(1, "Tomatito");
 
