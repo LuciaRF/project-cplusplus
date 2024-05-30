@@ -255,13 +255,161 @@ public:
                    Vector4<H>(v3[0], v3[1], v3[2], v3[3]),
                    Vector4<H>(v4[0], v4[1], v4[2], v4[3]) } } {}
 
-    // Métodos para acceder a una fila
-    Vector4<H>& operator[](std::size_t index) {
+    Matriz4x4(const Vector4<H>& v1, const Vector4<H>& v2, const Vector4<H>& v3, const Vector4<H>& v4)
+        : matriz{ { Vector4<H>(v1.getX(), v1.getY(), v1.getZ(), v1.getW()),
+                   Vector4<H>(v2.getX(), v2.getY(), v2.getZ(), v2.getW()),
+                   Vector4<H>(v3.getX(), v3.getY(), v3.getZ(), v3.getW()),
+                   Vector4<H>(v4.getX(), v4.getY(), v4.getZ(), v4.getW()) } } {}
+
+    // Métodos para acceder a una fila y que pueda modificarse el contenido
+    Vector4<H>& operator[](size_t index) {
         return matriz[index];
     }
-
-    const Vector4<H>& operator[](std::size_t index) const {
+    //solo lectura
+    const Vector4<H>& operator[](size_t index) const {
         return matriz[index];
+    }
+    
+    Matriz4x4<H>& operator*(Matriz4x4<H> other)
+    {
+        Vector4<H> v1(other[0].getX(),other[1].getX(),other[2].getX(),other[3].getX());
+        Vector4<H> v2(other[0].getY(),other[1].getY(),other[2].getY(),other[3].getY());
+        Vector4<H> v3(other[0].getZ(),other[1].getZ(),other[2].getZ(),other[3].getZ());
+        Vector4<H> v4(other[0].getW(),other[1].getW(),other[2].getW(),other[3].getW());
+
+        Vector4<H> r1(
+            matriz[0].dot(v1),
+            matriz[0].dot(v2),
+            matriz[0].dot(v3),
+            matriz[0].dot(v4)
+            );
+        Vector4<H> r2(
+            matriz[1].dot(v1),
+            matriz[1].dot(v2),
+            matriz[1].dot(v3),
+            matriz[1].dot(v4)
+            );
+        Vector4<H> r3(
+            matriz[2].dot(v1),
+            matriz[2].dot(v2),
+            matriz[2].dot(v3),
+            matriz[2].dot(v4)
+            );
+        Vector4<H> r4(
+            matriz[3].dot(v1),
+            matriz[3].dot(v2),
+            matriz[3].dot(v3),
+            matriz[3].dot(v4)
+            );
+
+        Matriz4x4<H> resultM = { r1, r2, r3, r4 };
+        
+        return resultM;
+    }
+
+    Vector4<H>& operator*(Vector4<H> other)
+    {
+        Vector4<H> v1(other.getX(), other.getX(), other.getX(), other.getX());
+
+
+        Vector4<H> r1(
+            matriz[0].dot(v1),
+            matriz[1].dot(v1),
+            matriz[2].dot(v1),
+            matriz[3].dot(v1)
+        );
+
+        return r1;
+    }
+
+    Matriz4x4<H>& operator*(H other)
+    {
+        Vector4<H> r1(
+            matriz[0].getX() * other,
+            matriz[0].getY() * other,
+            matriz[0].getZ() * other,
+            matriz[0].getW() * other
+        );
+        Vector4<H> r2(
+            matriz[1].getX() * other,
+            matriz[1].getY() * other,
+            matriz[1].getZ() * other,
+            matriz[1].getW() * other
+        );
+        Vector4<H> r3(
+            matriz[2].getX() * other,
+            matriz[2].getY() * other,
+            matriz[2].getZ() * other,
+            matriz[2].getW() * other
+        );
+        Vector4<H> r4(
+            matriz[3].getX() * other,
+            matriz[3].getY() * other,
+            matriz[3].getZ() * other,
+            matriz[3].getW() * other
+        );
+
+        Matriz4x4<H> resultM = { r1, r2, r3, r4 };
+
+        return resultM;
+    }
+
+    Matriz4x4<H>& operator/(H other)
+    {
+        Vector4<H> r1(
+            matriz[0].getX() / other,
+            matriz[0].getY() / other,
+            matriz[0].getZ() / other,
+            matriz[0].getW() / other
+        );
+        Vector4<H> r2(
+            matriz[1].getX() / other,
+            matriz[1].getY() / other,
+            matriz[1].getZ() / other,
+            matriz[1].getW() / other
+        );
+        Vector4<H> r3(
+            matriz[2].getX() / other,
+            matriz[2].getY() / other,
+            matriz[2].getZ() / other,
+            matriz[2].getW() / other
+        );
+        Vector4<H> r4(
+            matriz[3].getX() / other,
+            matriz[3].getY() / other,
+            matriz[3].getZ() / other,
+            matriz[3].getW() / other
+        );
+
+        Matriz4x4<H> resultM = { r1, r2, r3, r4 };
+
+        return resultM;
+    }
+
+    Matriz4x4<H>& operator+(Matriz4x4<H> other)
+    {
+        Matriz4x4<H> resultM = {
+            matriz[0] + other[0],
+            matriz[1] + other[1],
+            matriz[2] + other[2],
+            matriz[3] + other[3]
+
+        };
+
+        return resultM;
+    }
+
+    Matriz4x4<H>& operator-(Matriz4x4<H> other)
+    {
+        Matriz4x4<H> resultM = {
+            matriz[0] - other[0],
+            matriz[1] - other[1],
+            matriz[2] - other[2],
+            matriz[3] - other[3]
+
+        };
+
+        return resultM;
     }
 
     // Método para imprimir la matriz
@@ -273,6 +421,8 @@ public:
 
 };
 
+//template <typename H>
+//class
 
 int main()
 {
@@ -301,12 +451,38 @@ int main()
     v1->print();
     std::cout << "El resultado de la suma es: "<< sumas(1,2) << endl;
 
+    array<float, 4> a1 = { 7,2,1,3 };
+    array<float, 4> a2 = { 3,2,6,3 };
+
     Matriz4x4<float>* m1 = new Matriz4x4<float>();
     Matriz4x4<float>* m2 = new Matriz4x4<float>(1);
+    Matriz4x4<float> m3(a1,a1,a2,a2);
+
+
+    m1->print();
+    m2->print();
+    cout << "el w: " << m3[0].getX() * 2 << endl;
+    m3.print();
+    m3 = m3 * 2;
+    m3.print();
+    m3 = m3 / 2;
+    m3.print();
+    cout <<".........\n" << endl;
     
-    Matriz4x4<float> m3[] = {v1,v2,v1,v2};
+    Matriz4x4<float> mulMatriz = m3 * m3;
 
+    cout << "La multiplicacion de matrices es: \n" << endl;
 
+    mulMatriz.print();
+    cout << ".........\n" << endl;
+    Matriz4x4<float> mulSuma = m3 + *m2;
+
+    mulSuma.print();
+
+    cout << ".........\n" << endl;
+    Matriz4x4<float> mulResta = m3 + *m2;
+
+    mulSuma.print();
 
     /*Ejemplos de clases*/
 
