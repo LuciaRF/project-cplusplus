@@ -36,7 +36,7 @@ int main() {
     return 0;
 }
 
-
+```
 El proyecto **Render** implementa un framebuffer en C++ que representa una pantalla en la que cada píxel puede ser "1" o "0". La clase `Render` permite crear un framebuffer de un tamaño específico, manipular los píxeles y visualizar el estado del framebuffer.
 
 ## Características
