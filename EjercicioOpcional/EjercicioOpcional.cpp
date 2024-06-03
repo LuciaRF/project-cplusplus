@@ -1,7 +1,11 @@
 #include <cmath>
 #include "Aves.h"
 #include "Persona.h"
+#include "Render.h"
+#include <vector>
+
 using namespace std;
+typedef vector<vector<char>> vec_b;
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -280,14 +284,11 @@ public:
 
     Vector4<H>& operator*(Vector4<H> other)
     {
-        Vector4<H> v1(other.getX(), other.getX(), other.getX(), other.getX());
-
-
         Vector4<H> r1(
-            matriz[0].dot(v1),
-            matriz[1].dot(v1),
-            matriz[2].dot(v1),
-            matriz[3].dot(v1)
+            matriz[0].dot(other),
+            matriz[1].dot(other),
+            matriz[2].dot(other),
+            matriz[3].dot(other)
         );
 
         return r1;
@@ -427,10 +428,13 @@ public:
         }
     }
 
+
 };
 
 int main()
 {
+
+    std::string matrizBi[][2] = { { "bob","angie" }, {"tss","sae" } };
     Vector4<float>* v1 = new Vector4<float>(1, 2, 3, 4);
     Vector4<float>* v2 = new Vector4<float>(3, 7, 3, 5);
 
@@ -531,5 +535,27 @@ int main()
     // Mostrar los datos modificados
     std::cout << "Nombre: " << persona.getNombre() << std::endl;
     std::cout << "Edad: " << persona.getEdad() << std::endl;
+
+
+    /*** PROGRAMA PRINCIPAL ***/
+    
+    vec_b buffer;
+    Render* render = new Render(11, 11, buffer);
+    
+    Vector4<char>* punto = new Vector4<char>(3, 3, 0, 0);
+    Vector4<char>* punto2 = new Vector4<char>(-6, 0, 0, 0);
+
+    render->PutPixel(punto->getX(), punto->getY());
+    render->Draw();
+    *punto = *punto + *punto2;
+    render->PutPixel(punto->getX(), punto->getY());
+    render->Draw();
+
+    Quaternion<int> q(punto->getX(), punto->getY(), punto->getZ(), punto->getW(), M_PI / 4);
+    q.print();
+    Matriz4x4<int> mRot = q.getMatrizRot();
+    mRot.print();
+    Vector4<int> vRot = mRot * q;
+    vRot.print();
 }
 

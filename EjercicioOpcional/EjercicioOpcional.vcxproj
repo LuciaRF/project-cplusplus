@@ -130,11 +130,13 @@
     <ClCompile Include="Aves.cpp" />
     <ClCompile Include="EjercicioOpcional.cpp" />
     <ClCompile Include="Persona.cpp" />
+    <ClCompile Include="Render.cpp" />
     <ClCompile Include="Vectoring4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aves.h" />
     <ClInclude Include="Persona.h" />
+    <ClInclude Include="Render.h" />
     <ClInclude Include="Vectoring4.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
